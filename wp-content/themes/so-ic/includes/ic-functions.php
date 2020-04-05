@@ -58,7 +58,7 @@ function inspector_commander($gametype) {
                 position_marker($post_id,'playing');
             echo '</div>';
         echo '</div>';
-        if($commander === $current_user_id) {   
+        if($commander == $current_user_id) {   
             echo '<div class="step step5 on">Players are Guessing!</div>';
         }
 
@@ -75,21 +75,23 @@ function inspector_commander($gametype) {
                 echo '<div id="commander-overlay"><div class="tempit"></div></div>';  
                 echo '<div class="step step1">Tap to set your area</div>';
                 echo '<div class="step step2">Tap the checkmark to save your area</div>';
-                echo '<div class="step step3 inputarea"><span>Hint for Inspectors:</span><input type="text" id="inspectorhint" placeholder="Something Black" value=""  autocomplete="off" data-user="'.$current_user_id.'" data-id="'.get_the_ID().'" /><div class="checkarea"><div class="check"></div></div></div>';
+                echo '<div class="step step3 inputarea"><span>What do you spy?</span><input type="text" id="inspectorhint" placeholder="Something Black" value=""  autocomplete="off" data-user="'.$current_user_id.'" data-id="'.get_the_ID().'" /><div class="checkarea"><div class="check"></div></div></div>';
                 echo '<div class="step step3 text">Tap the checkmark to continue</div>';
                 echo '<div class="step step4">Starting Game...</div>';
                 echo '<div class="step step5">Players are Guessing!</div>';
                 echo '<div class="step steptimer on"></div>';
             echo '</div>';
         } else {
-            $image = get_post_meta($post_id,'ic_image',true);
+            $image = get_post_meta($post_id,'last_ic_image',true);
             $url = wp_get_attachment_image_src($image,'ic-thumb');
-            $text = get_post_meta($post_id,'ic_text',true);
+            $text = get_post_meta($post_id,'last_ic_text',true);
             if($text) {
                 echo '<div class="toggletip">?</div>';
                 echo '<div class="ictext hidden"><strong>Hint:</strong> '.$text.'</div>';
             }
-            echo '<h3 class="waiting">Waiting for the commander to upload an image</h3>';
+            $commander_id = get_post_meta($post_id,'ic_commander',true);
+            $commander = get_user_by('id',$commander_id);
+            echo '<h3 class="waiting">Waiting for '. $commander->display_name.' to upload an image</h3>';
             echo '<div class="content-wrapper flex-center">';
                 echo '<div class="content full">';
                     echo '<div id="inspector-image" data-c="'.get_post_meta($post_id,'ic_commander',true).'"><img src="'.$url[0].'" /></div>';
@@ -98,16 +100,16 @@ function inspector_commander($gametype) {
             echo '</div>';
            
         }
-        /*$waiting = get_post_meta($post_id,'waiting_on_commander',true);
+        $waiting = get_post_meta($post_id,'waiting_on_commander',true);
         if($waiting) {
             $max = $waiting - Game_Timer;
-            echo '<div id="max-timer" data-time="'.$waiting.'" data-max="'.$max.'"><span></span></div>';
-        }*/
+            echo '<div id="max-timer" data-time="'.$waiting.'" data-max="'.Game_Timer.'"><span></span></div>';
+        }
     }
     
 }
 
-/*add_action('template_redirect','check_for_commanders');
+add_action('template_redirect','check_for_commanders');
 function check_for_commanders() {
     global $post;
     $post_id = $post->ID;
@@ -139,7 +141,7 @@ function check_for_commanders() {
         }
     }
     
-}*/
+}
 
 
 function modal_login() {
@@ -159,15 +161,28 @@ function modal_login() {
                     echo '<input id="code" placeholder="123456" value=""  autocomplete="off" />';
                     echo '<div id="verifycode">Confirm</div><div id="verificationerror"></div>';
                 echo '</div>';
-                /*echo '<div class="step3">';
-                    echo '<h4>Pick A Display Name</h4>';
+                echo '<div class="step3">';
+                    echo '<h4>What&rsquo;s your name?</h4>';
                     echo '<input id="name" type="text" placeholder="Your Name" value=""  autocomplete="off" />';
                     echo '<div id="addname">Start Playing</div><div id="nameerror"></div>';
-                echo '</div>';*/
+                echo '</div>';
             echo '</div>';
         echo '</div>';
     echo '</div>';
 }
+
+function modal_alert() {
+    echo '<div class="modal-login alert">';
+        echo '<div class="login-form">';
+            echo '<div class="wrap">';
+                echo '<div class="step1">';
+                    echo '<h4>Sorry, Eye Spy It can only be played on mobile. Please visit us on your phone.</h4>';
+                echo '</div>';
+            echo '</div>';
+        echo '</div>';
+    echo '</div>';
+}
+
 function position_marker($post_id,$status) {
     $left = get_post_meta($post_id, 'ic_left',true);
     $top = get_post_meta($post_id, 'ic_top',true);
@@ -181,8 +196,9 @@ function position_marker($post_id,$status) {
     }
     echo '<div class="'.$class.'" data-commander="'.$commander.'" data-id="'.$post_id.'" data-user="'.$current_user_id.'" style="left:'.$left.'%; top: '.$top.'%;"></div>';
 }
+
 function upload_image_form($post_id) {
-    $last = get_post_meta($post_id,'last_ic_commander');
+    $last_commander = get_post_meta($post_id,'last_ic_commander');
     $current = get_current_user_id();
 
     $form = '<form id="upload-ic" method="post" enctype="multipart/form-data"><div class="image-upload-wrap">
@@ -191,12 +207,14 @@ function upload_image_form($post_id) {
             <div class="drag-text">
                 <h3>';
                 if($last != $current) {
-                    $form .= 'Nice Job!<br>';
+                    $commander = get_user_by('id',$current);
+                    $form .= 'Nice Job '.$commander->display_name.'!<br>';
                 } else {
-                    $form .= 'The Commander took too long!<br>';
+                    $last_commander = get_user_by('id',$last_commander);
+                    $form .= $last_commander->display_name.'  took too long!<br>';
                 }
                 
-            $form .= 'Now you&rsquo;re the Commander!<br><span>Add an Image</span></h3>'.loading_icon().'
+            $form .= 'Now it&rsquo;s your turn!<br><span>Add an Image</span></h3>'.loading_icon().'
             </div>
         </div>
         <div class="file-upload-content">
@@ -295,6 +313,11 @@ function end_ic_round(){
         update_post_meta($post_id,'last_ic_commander',$last_commander);
         update_post_meta($post_id,'ic_commander',$user_id);
         delete_post_meta($post_id,'ic_ready');
+        //save images
+        $last_image = get_post_meta($post_id,'ic_image',true);
+        $last_text = get_post_meta($post_id, 'ic_text',true);
+        update_post_meta($post_id,'last_ic_image',$last_image);
+        update_post_meta($post_id, 'last_ic_text',$last_text);
         $time = current_time('timestamp');
         update_post_meta($post_id,'waiting_on_commander',$time + Game_Timer);
         update_post_meta($post_id, 'ic_start_time', $time);
@@ -303,6 +326,7 @@ function end_ic_round(){
         delete_post_meta( $post_id, 'force_refresh_current_page_version' );
         delete_post_meta($post_id,'calculating');
         update_post_meta( $post_id, 'force_refresh_current_page_version', $page_version );
+        
     }
     wp_die();
 }
@@ -335,7 +359,7 @@ function verify_phone(){
     
     
 
-    $message = 'Inspector/Commander Verification Code is '.$code;
+    $message = 'Your Eye Spy It Verification Code is '.$code;
     twilio_message($phone, $message);
     wp_die();
 
@@ -371,13 +395,15 @@ function verify_code(){
                 print_r($user_id->get_error_message(),true) . '  '.$username;
             }
             $random_password = wp_generate_password( $length=12, $include_standard_special_chars=false );
-            $user_id = wp_create_user( $username, $random_password, NULL );
+            $user_id = wp_create_user( $username, $random_password, $username.'@eyespyit.com' );
             wp_clear_auth_cookie();
             wp_set_current_user ( $user_id );
             wp_set_auth_cookie  ( $user_id, true );
             echo $user_id;
             
         }
+        //now remove the entry
+        $wpdb->delete( $table, array( 'phone' => $phone ) );
     } 
     if($pass === 'error') {
         echo $pass;
@@ -422,3 +448,108 @@ function create_posttype() {
 }
 // Hooking up our function to theme setup
 add_action( 'init', 'create_posttype' );
+
+add_filter( 'auth_cookie_expiration', 'keep_me_logged_in_for_1_year' );
+function keep_me_logged_in_for_1_year( $expirein ) {
+
+    return 31556926; // 1 year in seconds
+    
+}
+
+
+//synch from airtable every hour
+add_action( 'init', 'delete_old_eyespy_attachments' );
+function delete_old_eyespy_attachments() {
+    if (! wp_next_scheduled ( 'delete_eyespy_attachments' )) {
+        wp_schedule_event(time(), 'daily', 'delete_eyespy_attachments');
+    }
+}
+ 
+//function that runs during wp cron to sync
+add_action('delete_eyespy_attachments', 'delete_eyespy_attachments_function');
+function delete_eyespy_attachments_function() {
+    $saved_ids = array();
+    $args = array( 'post_type' => 'games', 'post_status' => 'publish');
+    $posts = get_posts($args);
+    foreach ( $posts as $post ) {
+
+        $image = get_post_meta($post_id,'ic_image',true);
+        $last_image = get_post_meta($post_id,'last_ic_image',true);
+    }
+
+    $args = array(
+        'post_type' => 'games',
+        'post_status' => 'publish',
+        'posts_per_page' => -1,
+    );
+    $my_query = null;
+    $my_query = new WP_Query($args);
+    
+    if( $my_query->have_posts() ):
+        while ($my_query->have_posts()) : $my_query->the_post();
+            $post_id = get_the_ID();
+            $image = get_post_meta($post_id,'ic_image',true);
+            $last_image = get_post_meta($post_id,'last_ic_image',true);
+            if(!in_array($image,$saved_ids)) {
+                $saved_ids[] = $image;
+            }
+            if(!in_array($last_image,$saved_ids)) {
+                $saved_ids[] = $last_image;
+            }
+        endwhile; 
+    endif;
+    wp_reset_query();
+
+    $args = array(
+        'post_type' => 'attachment',
+        'numberposts' => null,
+        'post_status' => null
+    );
+    $attachments = get_posts($args);
+    if($attachments){
+        foreach($attachments as $attachment){
+            $attachment_id = $attachment->ID; 
+            if(!in_array($attachment_id,$saved_ids)) {
+                wp_delete_attachment($attachment_id,true);
+            }
+        }
+    }
+}
+
+add_action( 'wp_ajax_save_user_name','save_user_name' );
+add_action( 'wp_ajax_nopriv_save_user_name','save_user_name' );
+function save_user_name(){
+    $name = $_POST['name'];
+    $user_id = $_POST['user_id'];
+    $user = get_userdata( $user_id );
+    $args = array(
+        'ID'           => $user_id,
+        'display_name' => $name,
+        'nickname'     => $name
+    );
+    if(!wp_update_user( $args )) {
+        echo 'error';
+    }
+    wp_die();
+}
+
+
+function redirect_to_home_if_author_parameter() {
+	$is_author_set = get_query_var( 'author', '' );
+	if ( $is_author_set != '' && !is_admin()) {
+		wp_redirect( home_url(), 301 );
+		exit;
+	}
+}
+add_action( 'template_redirect', 'redirect_to_home_if_author_parameter' );
+
+function disable_rest_endpoints ( $endpoints ) {
+    if ( isset( $endpoints['/wp/v2/users'] ) ) {
+        unset( $endpoints['/wp/v2/users'] );
+    }
+    if ( isset( $endpoints['/wp/v2/users/(?P<id>[\d]+)'] ) ) {
+        unset( $endpoints['/wp/v2/users/(?P<id>[\d]+)'] );
+    }
+    return $endpoints;
+}
+add_filter( 'rest_endpoints', 'disable_rest_endpoints');

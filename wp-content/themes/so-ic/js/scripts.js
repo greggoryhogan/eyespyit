@@ -7,6 +7,7 @@
 
         window.onresize = function() {
             document.body.height = window.innerHeight;
+            $('main').height(window.innerHeight);
         }
         window.onresize(); // called to initially set the height.
 
@@ -66,6 +67,7 @@
             if (code.length < 6) {
                 $('#code').addClass('error');
             } else {
+
                 var phone = $('#phonenumber').val();
                 var data = {
                     'action': 'verify_code',
@@ -82,13 +84,53 @@
                             $('#verificationerror').text('Incorrect Code');
                         } else {
                             $('#verificationerror').text('Success!');
-                            var user_id = response;
+                            $('body').attr('data-user',response)
+                            /*var user_id = response;
                             $('.marker.inspector').attr('data-user',user_id);
-                            $('.modal-login').fadeOut();
+                            $('.modal-login').fadeOut();*/
+                            //location.reload(true);
+                            setTimeout(function() {
+                                $('.login-form .step1').addClass('done moredone');
+                            },600);
+                            
                         }
                         
                     },  
                     error: function (response) {
+                        
+                    }
+
+                });
+            }
+
+        });
+
+        $(document).on('click', '#addname', function(e) {
+            var name = $('#name').val();
+            var user_id = $('body').attr('data-user');
+            if (code.length < 1) {
+                $('#name').addClass('error');
+            } else {
+                var data = {
+                    'action': 'save_user_name',
+                    'user_id' : user_id,
+                    'name' : name,
+                };
+                //ajax
+                $.ajax({
+                    url: settings.ajaxurl,
+                    type: 'post',
+                    data: data,
+                    success: function (response) {
+                        if(response == 'error') {
+                            $('#nameerror').text('Enter a name');
+                        } else {
+                            $('#nameerror').text('Thanks for joining '+name+'!');
+                            setTimeout(function() {
+                                location.reload(true);
+                            },600);
+                            
+                        }
                         
                     }
 

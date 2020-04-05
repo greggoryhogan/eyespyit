@@ -20,13 +20,13 @@
 
 
 /* WP Force Refresh defaults */
-define( 'WP_FORCE_REFRESH_OPTION_REFRESH_INTERVAL_IN_SECONDS_DEFAULT', 1 );
-define( 'WP_FORCE_REFRESH_OPTION_REFRESH_INTERVAL_IN_SECONDS', 1 );
+define( 'WP_FORCE_REFRESH_OPTION_REFRESH_INTERVAL_IN_SECONDS_DEFAULT', 3 );
+define( 'WP_FORCE_REFRESH_OPTION_REFRESH_INTERVAL_IN_SECONDS', 3 );
 
 define('Twilio_Account_ID','AC1f403e0ebcea4188a343c1337aa913e7');
 define('Twilio_Auth_Token','b9f4fce4250e4e83d8c10887b75ab228');
 define('Twilio_Phone_Number','19782880383');
-define('Game_Timer',90);
+define('Game_Timer',300);
 
 // ** MySQL settings - You can get this info from your web host ** //
 /** The name of the database for WordPress */

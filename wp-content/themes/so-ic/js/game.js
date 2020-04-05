@@ -5,8 +5,34 @@
 
 	$(document).ready(function(){
         
+       
+        if($('#max-timer').length) {
+            
+            var maxtime = $('#max-timer').attr('data-time');
+            if(maxtime) {
+                var time = jQuery.trim($.now()).substring(0, 10);
+                var timeremaining = maxtime - time;
+            
+                var totaltime = $('#max-timer').attr('data-max'); //ie 300s
+                
+                setInterval(function(){
+                    
+                    timeremaining--;
+                    var percent = (timeremaining / totaltime) * 100;
+                    
+                    $('#max-timer span').css('width',percent+'%');
+                    if (timeremaining === 0){
+                        location.reload(true);
+                    }
+                }, 1000);
+            }
+            
+        }
+
+
         window.onresize = function() {
             document.body.height = window.innerHeight;
+            $('main').height(window.innerHeight);
         }
         window.onresize(); // called to initially set the height.
         
@@ -72,21 +98,23 @@
         var top = 0;
 
         $(document).on('click', '#commander-overlay .tempit', function(e) {
-            if($('.step.step1').hasClass('on')) {
-                $('.step.step1').removeClass('on');
-                $('.step.step2').addClass('on');
-            }
-            if(!$('.tempit').hasClass('tempting')) {
-                $('.tempit').addClass('tempting');
-            }
-            $('#commander-overlay .placeit').remove();
+            if(!$('.step3').hasClass('on')) {   
+                if($('.step.step1').hasClass('on')) {
+                    $('.step.step1').removeClass('on');
+                    $('.step.step2').addClass('on');
+                }
+                if(!$('.tempit').hasClass('tempting')) {
+                    $('.tempit').addClass('tempting');
+                }
+                $('#commander-overlay .placeit').remove();
 
-            var width = $(window).width();
-            var height = $(window).height();
-            left = (e.pageX / width) * 100;
-            top = (e.pageY / height) * 100;
+                var width = $(window).width();
+                var height = $(window).height();
+                left = (e.pageX / width) * 100;
+                top = (e.pageY / height) * 100;
 
-            $('#commander-overlay').append('<div class="placeit" style="left: '+e.pageX+'px; top:'+e.pageY+'px;"><div class="checkmark"><div class="check"></div></div></div>');
+                $('#commander-overlay').append('<div class="placeit" style="left: '+e.pageX+'px; top:'+e.pageY+'px;"><div class="checkmark"><div class="check"></div></div></div>');
+            }
         });
 
         $(document).on('click', '#commander-overlay .checkmark', function(e) {
@@ -134,15 +162,17 @@
         
 
         $(document).on('click', '#inspector-image', function(e) {
-            var user_id = $('.marker.inspector').attr('data-user');
-            if(user_id < 1) {
-                $('.modal-login').show().removeClass('unneeded');
-            } else {
-                if($('.wrongmarker.right').length) {
-
+            if(!$('.marker.commander').length) {
+                var user_id = $('.marker.inspector').attr('data-user');
+                if(user_id < 1) {
+                    $('.modal-login').show().removeClass('unneeded');
                 } else {
-                    $('#inspector-image').append('<div class="wrongmarker" style="left: '+e.pageX+'px; top:'+e.pageY+'px;">x</div>');
-                } 
+                    if($('.wrongmarker.right').length) {
+
+                    } else {
+                        $('#inspector-image').append('<div class="wrongmarker" style="left: '+e.pageX+'px; top:'+e.pageY+'px;">x</div>');
+                    } 
+                }
             }
         });
         $(document).on('click', '.marker.inspector', function(e) {
