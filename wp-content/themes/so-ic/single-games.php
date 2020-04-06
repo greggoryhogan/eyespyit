@@ -5,6 +5,6 @@
 */
 get_header(); 
 
-inspector_commander('full');
+eye_spy_it();
        
 get_footer(); ?>

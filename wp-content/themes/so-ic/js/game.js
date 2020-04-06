@@ -5,7 +5,19 @@
 
 	$(document).ready(function(){
         
+        //only allow embeds
+        if ( window.location === window.parent.location ) {
+            window.location.href = 'https://eyespyit.com/';
+        }
+
+        //fix for ios 100vh issue
+        window.onresize = function() {
+            document.body.height = window.innerHeight;
+            $('main').height(window.innerHeight);
+        }
+        window.onresize(); // called to initially set the height.
        
+        //timer countdown for image uploads
         if($('#max-timer').length) {
             
             var maxtime = $('#max-timer').attr('data-time');
@@ -29,26 +41,24 @@
             
         }
 
-
-        window.onresize = function() {
-            document.body.height = window.innerHeight;
-            $('main').height(window.innerHeight);
-        }
-        window.onresize(); // called to initially set the height.
-        
+        //onload show hint
         if($('.ictext').length) {
             setTimeout(function() {
                 $('.ictext').addClass('hidden');
             },2000);
         }
 
+        //toggle hint
         $('.toggletip').click(function() {
             $('.ictext').toggleClass('hidden');
         });
 
+        //#ic image is id of image upload input
         $('#ic-image').change(function() {
             $('#upload-ic').submit();
         });
+
+        //hanlde submit of image upload in wp
         $('#upload-ic').submit(function(e) {
             e.preventDefault();
             if ($('#ic-image').prop('files')[0]) {
@@ -84,19 +94,20 @@
                 });      
             
             } else {
-                removeUpload();
+                //removeUpload();
             }
         });
-          
-        function removeUpload() {
+        
+        //Not using this currently but saving
+        /*function removeUpload() {
             $('.file-upload-input').replaceWith($('.file-upload-input').clone());
             $('.file-upload-content').hide();
             $('.image-upload-wrap').show();
-        }
+        }*/
 
+        //Hanlde upload tap location
         var left = 0;
         var top = 0;
-
         $(document).on('click', '#commander-overlay .tempit', function(e) {
             if(!$('.step3').hasClass('on')) {   
                 if($('.step.step1').hasClass('on')) {
@@ -117,6 +128,7 @@
             }
         });
 
+        //approve image selection area
         $(document).on('click', '#commander-overlay .checkmark', function(e) {
             $('.step.step2').removeClass('on');
             $('.step.step3').addClass('on');
@@ -124,6 +136,7 @@
             $('#inspectorhint').focus();
         });
 
+        //set image description then start the round
         $(document).on('click', '.step3 .checkarea', function(e) {
             $('.step.step3.text').removeClass('on');
             $('.step.step4').addClass('on');
@@ -159,8 +172,7 @@
 
         });
 
-        
-
+        //when user taps on image
         $(document).on('click', '#inspector-image', function(e) {
             if(!$('.marker.commander').length) {
                 var user_id = $('.marker.inspector').attr('data-user');
@@ -178,6 +190,8 @@
                 }
             }
         });
+
+        //when user taps the desired location
         $(document).on('click', '.marker.inspector', function(e) {
             $('#inspector-image').append('<div class="wrongmarker right" style="left: '+e.pageX+'px; top:'+e.pageY+'px;"><div class="check"></div></div>');
             var post_id = $(this).attr('data-id');

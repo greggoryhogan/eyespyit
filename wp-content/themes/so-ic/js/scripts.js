@@ -5,6 +5,7 @@
 
 	$(document).ready(function(){
 
+        //hanlde ios 100vh bug
         window.onresize = function() {
             document.body.height = window.innerHeight;
             $('main').height(window.innerHeight);
@@ -12,6 +13,7 @@
         }
         window.onresize(); // called to initially set the height.
 
+        //format phone number
         $('#phonenumber').keyup(function(e){
             var ph = this.value.replace(/\D/g,'').substring(0,10);
             // Backspace and Delete keys
@@ -33,6 +35,7 @@
             this.value = ph;
         });
 
+        //verify phone number
         $(document).on('click', '#verifyphone', function(e) {
             $('#phonenumber').removeClass('error');
             var phone = $('#phonenumber').val();
@@ -42,40 +45,33 @@
             } else {
                 $('.login-form .step1').addClass('done');
             }
-            
             var data = {
 				'action': 'verify_phone',
 				'phone' : phone,
 			};
-            //ajax
             $.ajax({
                 url: settings.ajaxurl,
                 type: 'post',
                 data: data,
-                success: function (response) {
+                success: function () {
                     
                 },  
-                error: function (response) {
-                   
-                }
-
             });
 
         });
 
+        //handle code verification
         $(document).on('click', '#verifycode', function(e) {
             var code = $('#code').val();
             if (code.length < 6) {
                 $('#code').addClass('error');
             } else {
-
                 var phone = $('#phonenumber').val();
                 var data = {
                     'action': 'verify_code',
                     'phone' : phone,
                     'code' : code,
                 };
-                //ajax
                 $.ajax({
                     url: settings.ajaxurl,
                     type: 'post',
@@ -88,26 +84,17 @@
                         } else {
                             $('#verificationerror').text('Success!');
                             $('body').attr('data-user',response)
-                            /*var user_id = response;
-                            $('.marker.inspector').attr('data-user',user_id);
-                            $('.modal-login').fadeOut();*/
-                            //location.reload(true);
                             setTimeout(function() {
                                 $('.login-form .step1').addClass('done moredone');
                             },600);
                             
                         }
-                        
-                    },  
-                    error: function (response) {
-                        
                     }
-
                 });
             }
-
         });
 
+        //handle setting name initially
         $(document).on('click', '#addname', function(e) {
             var name = $('#name').val();
             var user_id = $('body').attr('data-user');
@@ -119,7 +106,6 @@
                     'user_id' : user_id,
                     'name' : name,
                 };
-                //ajax
                 $.ajax({
                     url: settings.ajaxurl,
                     type: 'post',
@@ -131,26 +117,14 @@
                             $('#nameerror').text('Thanks for joining '+name+'!');
                             setTimeout(function() {
                                 location.reload(true);
-                            },600);
-                            
+                            },600);     
                         }
-                        
                     }
-
                 });
             }
-
         });
 
-        
-
-        /*$('main').click(function() {
-            $('.catalognav').removeClass('using');
-            $('.cataloghelptext').removeClass('using');
-            $('main').removeClass('push');
-            $('main').removeClass('push-right');
-        });*/
-    
+        //left navigation trigger
         $('.navtrigger').click(function() {
             if($(this).hasClass('is-active')) {
                 $('nav.navigation').removeClass('push');
@@ -166,6 +140,7 @@
             }
         });
         
+        //right navigation trigger
         $('.chattrigger').click(function() {
             if($(this).hasClass('is-active')) {
                 $('nav.chat').removeClass('push-right');
@@ -181,7 +156,7 @@
             }
         });
 
-
+        //update user display name
         $('.displayname .checkcontainer').click(function(e) {
             var name = $('#displayname').val();
             var user_id = $('body').attr('data-user');
@@ -193,7 +168,6 @@
                     'user_id' : user_id,
                     'name' : name,
                 };
-                //ajax
                 $.ajax({
                     url: settings.ajaxurl,
                     type: 'post',
@@ -203,13 +177,12 @@
                         setTimeout(function() {
                             $('.displayname .checkcontainer').removeClass('zoomed');
                         },500);
-                        
                     }
-
                 });
             }
         });
 
+        //report image from sidebar
         $('#reportimage').click(function(e) {
             var post_id = $('body').attr('data-id');
             var user_id = $('body').attr('data-user');
@@ -218,7 +191,6 @@
                 'post_id' : post_id,
                 'user_id' : user_id
             };
-            //ajax
             $.ajax({
                 url: settings.ajaxurl,
                 type: 'post',
@@ -227,14 +199,9 @@
                     $('#reportimage').text(response);
                     setTimeout(function() {
                         $('#reportimage').text('Report Image');
-                    },2500);
-                    
+                    },2500);   
                 }
-
             });
-            
         });
-        
-          
     });
 })( jQuery );
