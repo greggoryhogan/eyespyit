@@ -167,10 +167,13 @@
                 if(user_id < 1) {
                     $('.modal-login').show().removeClass('unneeded');
                 } else {
-                    if($('.wrongmarker.right').length) {
+                    if($('.wrongmarker.right').length || $('.wrongmarker.pulse').length) {
 
                     } else {
-                        $('#inspector-image').append('<div class="wrongmarker" style="left: '+e.pageX+'px; top:'+e.pageY+'px;">x</div>');
+                        $('#inspector-image').append('<div class="wrongmarker pulse" style="left: '+e.pageX+'px; top:'+e.pageY+'px;"></div>');
+                        setTimeout(function() {
+                            $('.wrongmarker.pulse').fadeOut().remove();
+                        },1400);
                     } 
                 }
             }

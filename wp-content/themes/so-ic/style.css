@@ -19,6 +19,7 @@ html,body {
     width: 100%;
     height: 100%;
     position: relative;
+    overflow: hidden;
 }
 
 h1,
@@ -112,22 +113,22 @@ main {
 }
 #commander-overlay .placeit {
     position: absolute;
-    width: 70px;
-    height: 70px;
+    width: 40px;
+    height: 40px;
     display: block;
-    margin-left: -35px;
-    margin-top: -35px;
+    margin-left: -20px;
+    margin-top: -20px;
     border-radius: 50%;
     box-shadow: 0px 0px 0px 1000px rgba(0,0,0,.6);
     border: 3px dotted transparent;
 }
 .marker {
     position: absolute;
-    width: 70px;
-    height: 70px;
+    width: 40px;
+    height: 40px;
     display: block;
-    margin-left: -35px;
-    margin-top: -35px;
+    margin-left: -20px;
+    margin-top: -20px;
     border-radius: 50%;
     z-index: 10;
 }
@@ -139,20 +140,39 @@ main {
 }
 .wrongmarker {
     position: absolute;
-    width: 30px;
-    height: 30px;
+    width: 20px;
+    height: 20px;
     display: block;
-    margin-left: -15px;
-    margin-top: -15px;
+    margin-left: -10px;
+    margin-top: -10px;
     z-index: 10;
     font-size: 2.5rem;
     line-height: 30px;
 }
+.wrongmarker.pulse {
+    background: rgba(0,0,0,.6);
+    border-radius: 50%;
+    animation: poppoke 1.4s infinite;   
+}
+
+@keyframes poppoke {
+0%   { box-shadow: 0px 0px 0px 30px rgba(0,0,0,.6); }
+100%   { box-shadow: 0px 0px 0px 0px rgba(0,0,0,.6);}
+}
 .wrongmarker.right {
+    width: 30px;
+    height: 30px;
+    margin-left: -15px;
+    margin-top: -15px;
     background: #fff;
     border-radius: 50%;
     line-height: 20px;
+    animation: poppokewin 1.4s infinite;   
 }
+@keyframes poppokewin {
+    0%   { box-shadow: 0px 0px 0px 30px rgba(255,255,255,.6); }
+    100%   { box-shadow: 0px 0px 0px 0px rgba(255,255,255,.6);}
+    }
 .ictext {
     background: #834c69;
     color: #e6f5ff;
@@ -200,7 +220,7 @@ h3.waiting {
     background: #e6f5ff;
     border-radius: 50%;
     position: absolute;
-    right: -14px;
+    right: -25px;
     top: 50%;
     width: 28px;
     height: 28px;
@@ -250,6 +270,7 @@ h3.waiting {
     justify-content: center;
     text-align: center;
 }
+
 main .content {
     color: #e6f5ff;
 }
@@ -610,11 +631,302 @@ input[type="button"],
 }
 #phonenumber.error,
 #code.error,
-#name.error {
+#name.error,
+#displayname.error {
     box-shadow: 0px 0 0 1px #834c69;;   
 }
 #verificationerror,
 #nameerror {
     font-style: italic;
     margin-top: 10px;
+}
+main, nav {
+    transition: .3s all;
+    left: 0;
+}
+main {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+main.push {
+    left: 80%;
+}
+main.push-right {
+    left: -80%;
+}
+nav.navigation {
+    width: 80%;
+    left: -80%;
+    position: absolute;
+    top: 0;
+    height: 100%;
+}
+nav.navigation.push {
+    left: 0;
+}
+nav.chat {
+    width: 80%;
+    left: 180%;
+    position: absolute;
+    top: 0;
+    height: 100%;
+}
+nav.chat.push-right {
+    left: 20%;
+}
+.navtrigger {
+	position: absolute;
+	left: 10px;
+	top: 8px;
+	z-index: 9999;
+    cursor: pointer;
+}
+
+.hamburger {
+    display: inline-block;
+    cursor: pointer;
+    transition-property: opacity, filter;
+    transition-duration: 0.15s;
+    transition-timing-function: linear;
+    font: inherit;
+    color: inherit;
+    text-transform: none;
+    background-color: transparent;
+    border: 0;
+    margin: 0;
+    overflow: visible; 
+}
+.hamburger:hover {
+    opacity: 0.7; }
+.hamburger.is-active:hover {
+    opacity: 0.7; }
+.hamburger.is-active .hamburger-inner,
+.hamburger.is-active .hamburger-inner::before,
+.hamburger.is-active .hamburger-inner::after {
+    background-color: #e6f5ff; 
+}
+.hamburger-box {
+    width: 40px;
+    height: 24px;
+    display: inline-block;
+    position: relative; 
+}
+.hamburger-inner {
+    display: block;
+    top: 50%;
+    margin-top: -2px; 
+}
+.hamburger-inner, .hamburger-inner::before, .hamburger-inner::after {
+    width: 30px;
+    height: 2px;
+    background-color: #e6f5ff;
+    border-radius: 4px;
+    position: absolute;
+    transition-property: transform;
+    transition-duration: 0.15s;
+    transition-timing-function: ease; 
+}
+.hamburger-inner::before, .hamburger-inner::after {
+    content: "";
+    display: block; 
+}
+.hamburger-inner::before {
+    top: -8px; 
+}
+.hamburger-inner::after {
+    bottom: -8px;
+}
+.hamburger--squeeze .hamburger-inner {
+    transition-duration: 0.075s;
+    transition-timing-function: cubic-bezier(0.55, 0.055, 0.675, 0.19); 
+}
+.hamburger--squeeze .hamburger-inner::before {
+    transition: top 0.075s 0.12s ease, opacity 0.075s ease; 
+}
+.hamburger--squeeze .hamburger-inner::after {
+    transition: bottom 0.075s 0.12s ease, transform 0.075s cubic-bezier(0.55, 0.055, 0.675, 0.19); 
+}
+.hamburger--squeeze.is-active .hamburger-inner {
+    transform: rotate(45deg);
+    transition-delay: 0.12s;
+    transition-timing-function: cubic-bezier(0.215, 0.61, 0.355, 1); 
+}
+.hamburger--squeeze.is-active .hamburger-inner::before {
+    top: 0;
+    opacity: 0;
+    transition: top 0.075s ease, opacity 0.075s 0.12s ease; 
+}
+.hamburger--squeeze.is-active .hamburger-inner::after {
+    bottom: 0;
+    transform: rotate(-90deg);
+    transition: bottom 0.075s ease, transform 0.075s 0.12s cubic-bezier(0.215, 0.61, 0.355, 1); 
+}
+#squab {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size:.75em;
+}
+#squab a {
+    opacity: .7;
+}
+#squab span,
+#squab span img {
+    display: block;
+    width: 90%;
+    margin: 5px auto;
+}
+#squab a:hover,
+#squab a:active {
+    opacity: 1;
+}
+nav {
+    color: #e6f5ff;
+    background:#834c69;
+}
+nav a {
+    color: #e6f5ff;
+    text-decoration: none;;
+}
+.nav-content {
+    padding: 70px 18px;
+}
+.nav-content input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    display: block;
+    border-bottom: 1px solid #e6f5ff;
+    color: #e6f5ff;
+    border: none;
+    background: transparent;
+    border-bottom: 1px solid #e6f5ff;
+    width: 90%;
+    outline:0;
+    margin-top: 7px;
+    font-size: 1rem;
+    border-radius: 0px;
+}
+.displayname {
+    position: relative;
+}
+.displayname .checkcontainer {
+    right: -5px;
+    bottom: -1px;
+    position: absolute;
+    cursor: pointer;
+    width: 30px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+}
+.displayname .checkcontainer {
+    transition: .1s all;
+    transform: scale(1);
+}
+.displayname .checkcontainer.zoomed {
+    transform: scale(1.1);
+}
+.displayname .checkcontainer.zoomed .check {
+    border-bottom-color: #e6f5ff;
+    border-right-color: #e6f5ff;
+}
+
+#reportimage {
+    margin-top: 20px;
+    display: block;
+    padding: 6px 0;
+    text-align: center;
+    background: #e6f5ff;
+    color: #834c69;
+    font-family: 'Sen', sans-serif;
+    cursor:pointer;
+}
+.reportexplanation {
+    margin-top: 35px;
+}
+.chattrigger {
+    position: absolute;
+    top: 8px;
+    right: 5px;
+    transform: scale(.8);
+    opacity: .5;
+    transition: opacity .2s;
+}
+.chattrigger.is-active {
+    opacity: 1;
+}
+.speech-bubble {
+	position: relative;
+    border-radius: 3px;
+    display: block;
+    background: #e6f5ff;
+    width: 30px;
+    height: 20px;
+    display: block;
+    cursor: pointer;
+    
+}
+.speech-bubble::after {
+    content: '';
+    position: absolute;
+    top: 20px;
+    left: 12px;
+    width: 0;
+    height: 0;
+    border: 8px solid transparent;
+    border-top-color: transparent;
+    border-bottom-color: transparent;
+    border-bottom-style: solid;
+    border-bottom-width: 8px;
+    border-left-color: transparent;
+    border-left-style: solid;
+    border-left-width: 8px;
+    border-top-color: #e6f5ff;
+    border-bottom: 0;
+    border-left: 0;
+
+}
+.wcControlsButtonsIncluded input.wcSubmitButton {
+    float: none;
+    background: #e6f5ff;
+    color: #3c4f65;
+    width: 100%;
+    margin-top: 10px;
+    font-family: 'Sen', sans-serif;
+    text-transform: uppercase;
+}
+.wcMessages {
+    border:none!important;
+}
+.wcContainer .wcMessages .wcMessage .wcMessageContent {
+    margin-bottom: 0px!important;
+    background: transparent!important;
+}
+.wcControls input.wcSubmitButton, .wcControls input.wcInput {
+    color: #33313b!important;
+}
+.wcWidth300 .wcControls .wcToolButtonWrapper {
+    display:none!important;
+}
+.wcWidth300 .wcControls {
+    padding-top: 4px!important;
+}
+.wcControls input.wcSubmitButton, .wcControls input.wcInput {
+    height: 35px;
+    line-height: 15px;
+}
+.wcContainer .wcControls {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    right: 10px;
+    border: none;
+}
+.wcControls input.wcSubmitButton, .wcControls input.wcInput {
+    margin-bottom: 0px!important;
 }

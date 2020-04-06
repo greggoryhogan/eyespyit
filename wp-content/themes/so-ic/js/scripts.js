@@ -8,6 +8,7 @@
         window.onresize = function() {
             document.body.height = window.innerHeight;
             $('main').height(window.innerHeight);
+            $('.wcContainer .wcMessages').height(window.innerHeight * .6);
         }
         window.onresize(); // called to initially set the height.
 
@@ -82,6 +83,8 @@
                     success: function (response) {
                         if(response == 'error') {
                             $('#verificationerror').text('Incorrect Code');
+                        } else if(response == 'banned') {
+                            $('#verificationerror').text('This account has been suspended.');
                         } else {
                             $('#verificationerror').text('Success!');
                             $('body').attr('data-user',response)
@@ -108,7 +111,7 @@
         $(document).on('click', '#addname', function(e) {
             var name = $('#name').val();
             var user_id = $('body').attr('data-user');
-            if (code.length < 1) {
+            if (name.length < 1) {
                 $('#name').addClass('error');
             } else {
                 var data = {
@@ -137,6 +140,99 @@
                 });
             }
 
+        });
+
+        
+
+        /*$('main').click(function() {
+            $('.catalognav').removeClass('using');
+            $('.cataloghelptext').removeClass('using');
+            $('main').removeClass('push');
+            $('main').removeClass('push-right');
+        });*/
+    
+        $('.navtrigger').click(function() {
+            if($(this).hasClass('is-active')) {
+                $('nav.navigation').removeClass('push');
+                $('main').removeClass('push');
+                $('.navtrigger').removeClass('is-active');
+            } else {
+                $('.chattrigger').removeClass('is-active');
+                $('.navtrigger').addClass('is-active');
+                $('nav.navigation').addClass('push');
+                $('main').removeClass('push-right');
+                $('main').addClass('push');
+                $('nav.chat').removeClass('push-right');
+            }
+        });
+        
+        $('.chattrigger').click(function() {
+            if($(this).hasClass('is-active')) {
+                $('nav.chat').removeClass('push-right');
+                $('main').removeClass('push-right');
+                $('.chattrigger').removeClass('is-active');
+            } else {
+                $('.navtrigger').removeClass('is-active');
+                $('.chattrigger').addClass('is-active');
+                $('nav.chat').addClass('push-right');
+                $('main').removeClass('push');
+                $('main').addClass('push-right');
+                $('nav.navigation').removeClass('push');
+            }
+        });
+
+
+        $('.displayname .checkcontainer').click(function(e) {
+            var name = $('#displayname').val();
+            var user_id = $('body').attr('data-user');
+            if (name.length < 1) {
+                $('#displayname').addClass('error');
+            } else {
+                var data = {
+                    'action': 'save_user_name',
+                    'user_id' : user_id,
+                    'name' : name,
+                };
+                //ajax
+                $.ajax({
+                    url: settings.ajaxurl,
+                    type: 'post',
+                    data: data,
+                    success: function (response) {
+                        $('.displayname .checkcontainer').addClass('zoomed');
+                        setTimeout(function() {
+                            $('.displayname .checkcontainer').removeClass('zoomed');
+                        },500);
+                        
+                    }
+
+                });
+            }
+        });
+
+        $('#reportimage').click(function(e) {
+            var post_id = $('body').attr('data-id');
+            var user_id = $('body').attr('data-user');
+            var data = {
+                'action': 'report_image',
+                'post_id' : post_id,
+                'user_id' : user_id
+            };
+            //ajax
+            $.ajax({
+                url: settings.ajaxurl,
+                type: 'post',
+                data: data,
+                success: function (response) {
+                    $('#reportimage').text(response);
+                    setTimeout(function() {
+                        $('#reportimage').text('Report Image');
+                    },2500);
+                    
+                }
+
+            });
+            
         });
         
           

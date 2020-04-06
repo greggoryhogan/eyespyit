@@ -20,8 +20,8 @@ function icup_create_db() {
 		PRIMARY KEY  (id)
 		) $charset_collate;";
 
-		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
-		dbDelta( $sql );
+    require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+    dbDelta( $sql );
 }
 
 function embed_game($post_id) {
@@ -103,7 +103,9 @@ function inspector_commander($gametype) {
         $waiting = get_post_meta($post_id,'waiting_on_commander',true);
         if($waiting) {
             $max = $waiting - Game_Timer;
-            echo '<div id="max-timer" data-time="'.$waiting.'" data-max="'.Game_Timer.'"><span></span></div>';
+            if($current_user_id > 0 && wp_is_mobile()) {
+                echo '<div id="max-timer" data-time="'.$waiting.'" data-max="'.Game_Timer.'"><span></span></div>';
+            }
         }
     }
     
@@ -119,7 +121,7 @@ function check_for_commanders() {
         if($waiting < $time) { //time has passed the waiting period
             $commander = get_post_meta($post_id,'ic_commander',true);
             $current_user_id = get_current_user_id();
-            if($commander != $current_user_id && $current_user_id != 0) {
+            if($commander != $current_user_id && $current_user_id != 0 && wp_is_mobile()) {
                 $calculating = get_post_meta($post_id,'calculating',true);
                 if(!$calculating) {
                     add_post_meta($post_id,'calculating',true);
@@ -386,10 +388,16 @@ function verify_code(){
         $user = get_user_by('login',$username);
         if(!empty( $user )) {
             $user_id = $user->ID;
-            wp_clear_auth_cookie();
-            wp_set_current_user ( $user_id );
-            wp_set_auth_cookie  ( $user_id, true );
-            echo $user_id;
+            //check if we banned them before
+            $banned = get_user_meta($user_id,'banned',true);
+            if($banned) {
+                $pass = 'banned';
+            } else {
+                wp_clear_auth_cookie();
+                wp_set_current_user ( $user_id );
+                wp_set_auth_cookie  ( $user_id, true );
+                echo $user_id;
+            }
         } else {
             if( is_wp_error( $user ) ) {
                 print_r($user_id->get_error_message(),true) . '  '.$username;
@@ -405,11 +413,9 @@ function verify_code(){
         //now remove the entry
         $wpdb->delete( $table, array( 'phone' => $phone ) );
     } 
-    if($pass === 'error') {
+    if($pass == 'error' || $pass = 'banned') {
         echo $pass;
     }
-
-   
     
     wp_die();
 
@@ -533,6 +539,51 @@ function save_user_name(){
     wp_die();
 }
 
+add_action( 'wp_ajax_report_image','report_image' );
+add_action( 'wp_ajax_nopriv_report_image','report_image' );
+function report_image(){
+    $post_id = $_POST['post_id'];
+    $user_id = $_POST['user_id'];
+
+    $reports = get_post_meta($post_id,'reported_image');
+    if(!in_array($user_id,$reports)) {
+
+        add_post_meta($post_id,'reported_image',$user_id);
+
+        $commander = get_post_meta($post_id,'ic_commander',true);
+        add_user_meta($commander,'reported_user',true);
+        $user_reports = get_post_meta($post_id,'reported_user');
+        $user_report_count = count($user_reports);
+        if($user_report_count > 3) {
+            add_user_meta($commander,'banned',true);
+            $sessions = WP_Session_Tokens::get_instance($commander);
+            $sessions->destroy_all();
+        }
+        $reports = get_post_meta($post_id,'reported_image');
+        $report_count = count($reports);
+
+        if($report_count > 3) {
+            $calculating = get_post_meta($post_id,'calculating',true);
+            if(!$calculating) {
+                add_post_meta($post_id,'calculating',true);
+                delete_post_meta($post_id, 'ic_image');
+                delete_post_meta($post_id, 'ic_text');
+                $time = current_time('timestamp');
+                $page_version_hash = wp_hash($time);
+                $page_version = substr($page_version_hash, 0, 8);
+                delete_post_meta( $post_id, 'force_refresh_current_page_version' );
+                delete_post_meta($post_id,'calculating');
+                update_post_meta( $post_id, 'force_refresh_current_page_version', $page_version );
+            }
+        }
+        
+        echo 'Image Reported';
+    } else {
+        echo 'Already Reported';
+    }
+    
+    wp_die();
+}
 
 function redirect_to_home_if_author_parameter() {
 	$is_author_set = get_query_var( 'author', '' );
