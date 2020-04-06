@@ -165,7 +165,10 @@ add_filter( 'rest_endpoints', 'disable_rest_endpoints');
 add_action( 'wp_enqueue_scripts', 'wp_juice_cleanse', 200 );
 function wp_juice_cleanse() {
     wp_dequeue_style('wp-block-library');
-    wp_dequeue_style('wc-block-style'); // WooCommerce - you can remove this if you don't use Woocommerce
+    wp_dequeue_style('wc-block-style');
+    if(is_singular('games')) {
+        wp_dequeue_style('wise_chat_core');
+    }
 }
 
 /*
@@ -245,6 +248,23 @@ function disable_embeds_rewrites($rules) {
  */
 function deregister_footer_scripts(){
     wp_dequeue_script( 'wp-embed' );
+    if(is_singular('games')) {
+        wp_dequeue_script('wise_chat_messages_history');
+		wp_dequeue_script('wise_chat_messages');
+		wp_dequeue_script('wise_chat_settings');
+		wp_dequeue_script('wise_chat_maintenance_executor');
+		wp_dequeue_script('wise_chat_core');
+        wp_dequeue_script('wise_chat_3rdparty_momentjs');
+        
+        wp_deregister_script('wise_chat_core');
+        wp_deregister_script('wise_chat_messages_history');
+		wp_deregister_script('wise_chat_messages');
+		wp_deregister_script('wise_chat_settings');
+		wp_deregister_script('wise_chat_maintenance_executor');
+		wp_deregister_script('wise_chat_core');
+        wp_deregister_script('wise_chat_3rdparty_momentjs');
+        
+    }
 }
 add_action( 'wp_footer', 'deregister_footer_scripts' );
 
@@ -606,6 +626,7 @@ function end_ic_round(){
     if(!$calculating) {
         add_post_meta($post_id,'calculating',true);
         $last_commander = get_post_meta($post_id,'ic_commander',true);
+        add_user_meta($last_commander,'won_round',true);
         update_post_meta($post_id,'last_ic_commander',$last_commander);
         update_post_meta($post_id,'ic_commander',$user_id);
         delete_post_meta($post_id,'ic_ready');

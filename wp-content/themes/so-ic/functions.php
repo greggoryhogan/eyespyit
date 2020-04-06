@@ -3,13 +3,16 @@
 require_once(get_stylesheet_directory() . '/includes/ic-functions.php');
 
 function squabble_scripts() {
-    $rand = rand( 1, 99999999999 );
+    //s$rand = rand( 1, 99999999999 );
+    $rand = '1.0';
     wp_enqueue_style( 'ic-stylez', get_stylesheet_directory_uri() . '/style.css','', $rand );
     //wp_enqueue_script( 'imagesloaded-js', get_stylesheet_directory_uri() . '/js/imagesloaded.pkgd.min.js', array('jquery'), null, true ); 
-    wp_enqueue_script( 'ic-scripts', get_stylesheet_directory_uri() . '/js/scripts.js', array('jquery'), $rand,true ); 
-    wp_localize_script('ic-scripts', 'settings', array(
-        'ajaxurl' => admin_url('admin-ajax.php')
-    ));
+    if(!is_singular('games')) {
+        wp_enqueue_script( 'ic-scripts', get_stylesheet_directory_uri() . '/js/scripts.js', array('jquery'), $rand,true ); 
+        wp_localize_script('ic-scripts', 'settings', array(
+            'ajaxurl' => admin_url('admin-ajax.php')
+        ));
+    }
 
     if(is_singular('games')) {
         wp_enqueue_script( 'ic-game', get_stylesheet_directory_uri() . '/js/game.js', array('jquery'), $rand,true ); 

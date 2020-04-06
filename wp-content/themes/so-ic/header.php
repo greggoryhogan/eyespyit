@@ -7,10 +7,11 @@
 <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?> data-user="<?php echo get_current_user_id(); ?>"  data-id="<?php echo get_post_meta(get_the_ID(),'ic_game',true); ?>">
+    <?php $user_id = get_current_user_id(); ?>
     <?php if(!is_singular('games')) { ?>
         <header>
             <div id="logo"><h1>Eye Spy It</h1></div>
-            <?php if(wp_is_mobile()) { ?>
+            <?php if(wp_is_mobile() && $user_id > 0) { ?>
                 <div class="navtrigger hamburger hamburger--squeeze js-hamburger">
                     <div class="hamburger-box">
                     <div class="hamburger-inner"></div>
@@ -26,7 +27,6 @@
             <nav class="navigation">
                 <div class="nav-content">
                     <?php 
-                    $user_id = get_current_user_id();
                     if($user_id > 0) {
                         $user = get_user_by('id',$user_id); ?>
                         <div class="displayname">Name:
