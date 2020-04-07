@@ -221,7 +221,7 @@ function wp_snippet_disable_rest_api( $access ) {
  */
 function remove_unneccessary_wp() {
     // Remove the REST API endpoint.
-    remove_action( 'rest_api_init', 'wp_oembed_register_route' );
+    remove_action( 'rest_api_init', 'wp_oembed_register_route' );   
     // Turn off oEmbed auto discovery.
     add_filter( 'embed_oembed_discover', '__return_false' );
     // Don't filter oEmbed results.
@@ -250,7 +250,7 @@ function remove_unneccessary_wp() {
     add_filter( 'wp_resource_hints', 'disable_emojis_remove_dns_prefetch', 10, 2 );
 }
 add_action( 'init', 'remove_unneccessary_wp' );
-   
+
 /*
  *
  * Disable OEmbed
@@ -422,6 +422,17 @@ function eye_spy_it() {
         }
     }
 }
+
+function is_first_time() {
+    if (isset($_COOKIE['_wp_first_time']) || is_user_logged_in()) {
+        return false;
+    } else {
+        // expires in 30 days.
+        setcookie('_wp_first_time', 1, time() + (WEEK_IN_SECONDS * 4), COOKIEPATH, COOKIE_DOMAIN, false);
+        return true;
+    }
+}
+add_action( 'init', 'is_first_time');
 
 /*
  *

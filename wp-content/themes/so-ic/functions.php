@@ -4,7 +4,7 @@ require_once(get_stylesheet_directory() . '/includes/ic-functions.php');
 
 function squabble_scripts() {
     //s$rand = rand( 1, 99999999999 );
-    $rand = '1.0';
+    $rand = '1.01';
     wp_enqueue_style( 'ic-stylez', get_stylesheet_directory_uri() . '/style.css','', $rand );
     //wp_enqueue_script( 'imagesloaded-js', get_stylesheet_directory_uri() . '/js/imagesloaded.pkgd.min.js', array('jquery'), null, true ); 
     if(!is_singular('games')) {

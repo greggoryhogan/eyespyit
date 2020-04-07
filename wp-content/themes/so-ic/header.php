@@ -1,12 +1,31 @@
+<?php 
+if (is_first_time()) {
+    header("Link: </wp-content/themes/so-ic/style.css?ver=1.0>; rel=preload; as=style", false);
+    header("Link: </wp-content/themes/so-ic/js/scripts.js?ver=1.0>; rel=preload; as=script", false);
+    header("Link: </wp-content/themes/so-ic/js/game.js?ver=1.0>; rel=preload; as=script", false);
+} ?>
 <!DOCTYPE html>
 <html class="no-js" <?php language_attributes(); ?>>
 <head>
+<?php if(!is_singular('games')) { ?>
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-162922731-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-162922731-1');
+</script>
+<?php } ?>
+<title>Eye Spy It | Are you fast enough to win?</title>
 <meta charset="<?php bloginfo( 'charset' ); ?>">
 <meta name="viewport" content="width=device-width,height=device-height,initial-scale=1.0" >
 <link rel="icon" href="fav.png">
 <?php wp_head(); ?>
 </head>
 <body <?php body_class(); ?> data-user="<?php echo get_current_user_id(); ?>"  data-id="<?php echo get_post_meta(get_the_ID(),'ic_game',true); ?>">
+    <div id="loadOverlay" style="background-color:#33313b; position:absolute; top:0px; left:0px; width:100%; height:100%; z-index:2000;"></div>
     <?php $user_id = get_current_user_id(); ?>
     <?php if(!is_singular('games')) { ?>
         <header>
@@ -33,6 +52,8 @@
                             <input id="displayname" value="<?php echo  $user->display_name; ?>" />
                             <div class="checkcontainer"><div class="check"></div></div>
                         </div>
+
+                        <div class="reportexplanation"><strong>How to Play:</strong><br>Take a picture of your surroundings and then choose an item for users to find. Players click on the screen to guess your item.</div>
 
                         <div class="reportexplanation"><strong>Content notice:</strong><br>If an image is reported more than 3 times, it will be removed from the site and a new user will be selected to upload an image. If a user is reported more than 3 times they will automatically be banned from participating.</div>
                         <div id="reportimage">Report Image</div>
