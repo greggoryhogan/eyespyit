@@ -612,6 +612,7 @@ input[type="button"],
 .login-form .wrap {
     width: 300%;
     display: flex;
+    align-items: center;
 }
 .login-form .step1,
 .login-form .step2,
@@ -622,6 +623,11 @@ input[type="button"],
     transition: .3s all;
     margin-left: 0;
     padding: 3% 2%;
+}
+.login-form .step1 h4,
+.login-form .step2 h4,
+.login-form .step3 h4 {
+    margin-bottom: 0px;
 }
 .login-form .step1.done {
     margin-left: -33%;
@@ -974,6 +980,25 @@ nav a {
     font-weight: 600;
     margin-left: -10px;
     margin-right: 0;
+}
+
+.verifyicon {
+    margin-top: 15px;
+    font-style: italic;
+    font-size: .8em;
+}
+.verifyicon span {
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    line-height: 20px;
+    margin-right: 7px;
+    background: #e6f5ff;
+    color: #3c4f65;
+    display: inline-block;
+    border-radius: 50%;
+    font-style: normal;
+    font-weight: 600;
 }
 
 #loadOverlay{display: none;}
