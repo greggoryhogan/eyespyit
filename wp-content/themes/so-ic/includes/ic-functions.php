@@ -480,16 +480,16 @@ function modal_login() {
     if(get_current_user_id() > 0) {
         return;
     }
-    echo '<div class="modla-login-cover"></div>';
-    echo '<div class="modal-login unneeded">';
+    //echo '<div class="modla-login-cover"></div>';
+    echo '<div class="modal-login">';
         echo '<div class="login-form">';
             echo '<div class="wrap">';
                 echo '<div class="step1">';
-                    echo '<h4>In order to prevent abuse, we require a phone number to play.</h4>';
+                    echo '<h4>Eye Spy It is a modern take on I Spy. Users upload a photo and it&rsquo;s up to you to spot &ldquo;it&rdquo; faster than the competition!</h4><p>In order to prevent abuse, we require a phone number to play.</p>';
                     echo '<input id="phonenumber" type="tel" placeholder="(123) 456-7890" value=""  autocomplete="off" />';
                     echo '<div id="verifyphone">Verify</div>';
-                    echo '<div class="verifyicon">Phone verification proves you are human and helps prevent spam and abuse</div>'; //<span>!</span>
-                echo '</div>';
+                    echo '<div class="verifyicon">Phone verification proves you are human and helps prevent spam and abuse</div>';
+                echo '</div>';//<span>!</span>
                 echo '<div class="step2">';
                     echo '<h4>Great! To verify your phone number, please enter the 6 digit code we sent to your phone</h4>';
                     echo '<input id="code" placeholder="123456" value=""  autocomplete="off" />';
@@ -562,7 +562,7 @@ function upload_image_form($post_id) {
                     $form .= $last_commander->display_name.'  took too long!<br>';
                 }
                 
-            $form .= 'Now it&rsquo;s your turn!<br><span>Add an Image</span></h3>'.loading_icon().'
+            $form .= 'Now it&rsquo;s your turn!<br>You have 3 minutes to upload your image.<span>Add an Image</span></h3>'.loading_icon().'
             </div>
         </div>
         <div class="file-upload-content">

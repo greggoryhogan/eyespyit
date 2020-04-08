@@ -53,7 +53,7 @@ if (is_first_time()) {
                             <div class="checkcontainer"><div class="check"></div></div>
                         </div>
                     <?php } ?>
-                    <div class="reportexplanation"><strong>How to Play:</strong><br>Eye Spy It is a modern take on I Spy. Users upload a photo and it&rsquo;s up to you to spot &ldquo;it&rdquo; faster than the competition!</div>
+                    <div class="reportexplanation"><strong>How to Play:</strong><br>Eye Spy It is a modern take on I Spy. Users upload a photo and it&rsquo;s up to you to spot &ldquo;it&rdquo; faster than the competition. When you find it, tap on the screen to see if you&rsquo;re right!</div>
 
                     <div class="reportexplanation"><strong>Content notice:</strong><br>If an image is reported more than 3 times, it will be removed from the site and a new user will be selected to upload an image. If a user is reported more than 3 times they will automatically be banned from participating.</div>
                     <?php if($user_id > 0) { ?>
