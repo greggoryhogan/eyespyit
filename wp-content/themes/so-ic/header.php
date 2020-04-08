@@ -30,7 +30,7 @@ if (is_first_time()) {
     <?php if(!is_singular('games')) { ?>
         <header>
             <div id="logo"><h1>Eye Spy It</h1></div>
-            <?php if(wp_is_mobile() && $user_id > 0) { ?>
+            <?php if(wp_is_mobile()) { ?>
                 <div class="navtrigger hamburger hamburger--squeeze js-hamburger">
                     <div class="hamburger-box">
                     <div class="hamburger-inner"></div>
@@ -52,12 +52,14 @@ if (is_first_time()) {
                             <input id="displayname" value="<?php echo  $user->display_name; ?>" />
                             <div class="checkcontainer"><div class="check"></div></div>
                         </div>
+                    <?php } ?>
+                    <div class="reportexplanation"><strong>How to Play:</strong><br>Eye Spy It is a modern take on I Spy. Users upload a photo and it&rsquo;s up to you to spot &ldquo;it&rdquo; faster than the competition!</div>
 
-                        <div class="reportexplanation"><strong>How to Play:</strong><br>Take a picture of your surroundings and then choose an item for users to find. Players click on the screen to guess your item.</div>
-
-                        <div class="reportexplanation"><strong>Content notice:</strong><br>If an image is reported more than 3 times, it will be removed from the site and a new user will be selected to upload an image. If a user is reported more than 3 times they will automatically be banned from participating.</div>
+                    <div class="reportexplanation"><strong>Content notice:</strong><br>If an image is reported more than 3 times, it will be removed from the site and a new user will be selected to upload an image. If a user is reported more than 3 times they will automatically be banned from participating.</div>
+                    <?php if($user_id > 0) { ?>
                         <div id="reportimage">Report Image</div>
                     <?php } ?>
+                    
                 </div>
                 <div id="squab"><a href="https://squabbleable.com" title="Try Squabbleable" target="_blank">Liking Eye Spy It? Try our other game<span><img src="<?php echo get_template_directory_uri(); ?>/images/squabbleable.png" /></span></a>
             </nav>

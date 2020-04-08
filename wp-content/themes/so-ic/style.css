@@ -541,8 +541,9 @@ input[type="button"],
     height: 100%;
     display: flex;
 }
-.modal-login {
-    position: fixed;
+.modal-login,
+.modla-login-cover {
+    position: absolute;
     z-index: 11;
     top: 0;
     left: 0;
@@ -552,8 +553,11 @@ input[type="button"],
     transition: opacity .3s;
     opacity: 1;
 }
+.modla-login-cover {
+    background:none;
+    z-index: 12;
+}
 .modal-login.unneeded {
-    display:none;
     opacity: 0;
 }
 .modal-login .login-form {

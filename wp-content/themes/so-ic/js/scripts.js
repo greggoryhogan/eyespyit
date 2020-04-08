@@ -124,6 +124,20 @@
             }
         });
 
+        //trigger login
+        $('.modla-login-cover').click(function(e) {
+            $(this).remove();
+            if($('.wrongmarker.right').length || $('.wrongmarker.pulse').length) {
+
+            } else {
+                $('.gameembed').append('<div class="wrongmarker pulse" style="left: '+e.pageX+'px; top:'+e.pageY+'px;"></div>');
+                setTimeout(function() {
+                    $('.wrongmarker.pulse').fadeOut().remove();
+                },1400);
+            } 
+            $('.modal-login').removeClass('unneeded');
+        });
+
         //left navigation trigger
         $('.navtrigger').click(function() {
             if($(this).hasClass('is-active')) {
